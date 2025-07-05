@@ -15,8 +15,10 @@ app.use(cors({ credentials: true }));
 
 // API endpoints
 import authRouter from './routes/authRoutes.js'
+import userRouter from './routes/userRoutes.js';
 
 app.use('/api/auth', authRouter)
+app.use('/api/user', userRouter)
 
 app.listen(port, () => (
     console.log(`Server is listening on PORT:${port}`)
