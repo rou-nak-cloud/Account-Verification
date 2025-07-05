@@ -144,9 +144,25 @@ export const logout = async (req,res) => {
 
 // Check verified account
 export const sendVerifyOtp = async (req,res) => {
-    const {userId} = req.body;
+    try {
+    // const {userId} = req.body;  NOT safe anyone can change if it is in body
+    const userId = req.user?.id; // take it from middleware
+
+        if (!userId) {
+            return res.status(400).json({
+                success: false,
+                message: "User ID is required",
+            });
+        }
     
     const user = await User.findById(userId)
+     if (!user) {
+            return res.status(404).json({
+                success: false,
+                message: "User not found",
+            });
+        }
+
     if(user.isAccountVerified){
         return res.status(400).json({
             success: false,
@@ -154,7 +170,6 @@ export const sendVerifyOtp = async (req,res) => {
         })
     }
     
-    try {
         const otp = String(Math.floor(100000 + Math.random() * 900000)) // generate a 6 digit random number
         user.verifyOtp = otp;
         user.verifyOtpExpireAt = Date.now() + 10 * 60 * 1000; // 10 mins from now
@@ -182,8 +197,11 @@ export const sendVerifyOtp = async (req,res) => {
     }
 }   
 
+//  Verify email using OTP
 export const verifyEmail = async (req,res) => {
-    const {userId, otp} = req.body;
+    // const {userId, otp} = req.body;
+    const userId = req.user?.id;   // Get from token, not req.body
+    const { otp } = req.body;
 
     if(!userId || !otp){
         return res.status(400).json({
@@ -195,7 +213,7 @@ export const verifyEmail = async (req,res) => {
     try {
         const user = await User.findById(userId);
         if(!user){
-            return res.status(400).json({
+            return res.status(404).json({
                 success: false,
                 message: "User does not exist"
             })
@@ -206,7 +224,7 @@ export const verifyEmail = async (req,res) => {
                 message: "Invalid OTP"
             })
         }
-        if(user.verifyOtp < Date.now()){
+        if(user.verifyOtpExpireAt < Date.now()){
             return res.status(400).json({
                 success: false,
                 message: "OTP has expired. Please request a new OTP."
@@ -227,6 +245,22 @@ export const verifyEmail = async (req,res) => {
         return res.status(400).json({
             success: false,
             message: "Something went wrong while verifying email", 
+            error: error.message
+        })
+    }
+}
+
+//  check user is Authenticated or not ??
+export const isAuthenticated = async (req,res) => {
+    try {
+        return res.status(200).json({
+            success: true,
+            message: "User is Original."
+        })
+    } catch (error) {
+        return res.status(400).json({
+            success: false,
+            message: "User is NOT Authenticated or Something went wrong..",
             error: error.message
         })
     }
