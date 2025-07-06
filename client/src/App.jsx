@@ -1,9 +1,21 @@
 import React from 'react'
+import { Route, Routes } from 'react-router-dom'
+
+import { Home,
+        Login,
+        EmailVerify,
+        ResetPassword,
+} from './context/clientPageRoute'
 
 const App = () => {
   return (
     <div>
-      <h1 className='text-3xl text-red-300'>Check</h1>
+      <Routes>
+        <Route path='/' element={<Home />} />
+        <Route path='/login' element={<Login />} />
+        <Route path='/email-verify' element={<EmailVerify />} />
+        <Route path='/reset-password' element={<ResetPassword />} />
+      </Routes>
     </div>
   )
 }
