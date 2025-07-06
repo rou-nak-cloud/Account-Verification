@@ -2,17 +2,51 @@ import React, { useContext, useState } from 'react'
 import { assets } from '../assets/assets'
 import { useNavigate } from 'react-router-dom'
 import { AppContext } from '../context/AppContext'
+import axios from 'axios'
+import { toast } from 'react-toastify'
 
 const Login = () => {
 
   const navigate = useNavigate();
 
-  const { backendUrl, setIsLoggedIn } = useContext(AppContext)
+  const { backendUrl, setIsLoggedIn, getUserData, } = useContext(AppContext)
 
   const [state, setState] = useState('Sign Up')
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+
+  const onSubmitHandler = async(e) => {
+    try {
+      e.preventDefault();
+
+      axios.defaults.withCredentials = true // to send the cookies
+      if (state === 'Sign Up') {
+        const {data} =  await axios.post(backendUrl + '/api/auth/register', {name,email,password})
+        if(data.success){
+          setIsLoggedIn(true)
+          getUserData()
+          navigate('/')
+        } else{
+          console.log(data.message)
+          toast.error("SignUp Failed")
+        }
+      } else {
+        const {data} = await axios.post(backendUrl + '/api/auth/login', {email,password})
+        if(data.success){
+          setIsLoggedIn(true)
+          getUserData()
+          navigate('/')
+        } else{
+           console.log(data.message)
+          toast.error("Login Failed")
+        }
+      }
+    } catch (error) {
+      console.log(error.message)
+      toast.error("Can't Submit the Form")
+    }
+  }
 
   return (
     <div className='flex items-center justify-center min-h-screen px-6 sm:px-1 bg-gradient-to-br from-blue-200/90 to bg-purple-400/60'>
@@ -24,6 +58,7 @@ const Login = () => {
         <p className='text-sm font-light text-center mb-6'>{state === 'Sign Up' ? 'Create your Account' : 'Login to your account!'}</p>
 
           <form action="#"
+          onSubmit={onSubmitHandler}
           >
             {state === 'Sign Up' && ( 
               <div className='mb-4 flex items-center gap-3 w-full px-4 py-2 rounded-3xl bg-[#333A6C]'>
