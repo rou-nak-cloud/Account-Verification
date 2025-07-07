@@ -1,22 +1,31 @@
 # 🛡️ Account Verification App
 
-A **Node.js & Express** app using **MongoDB**, featuring:
-
-- ✅ Email verification via OTP  
-- 🔐 Secure login for verified users  
-- 🔄 Password reset with OTP support
-- 🗄️ Secure Storage: User data stored in MongoDB with hashed credentials and expiry logic.
-
-## 📋 Features
-
-- 🧾 **User Registration** with email and password
-- 🔐 **Login** only for verified accounts
-- 📩 **OTP Email Verification**
-- 🔁 **Password Reset** via OTP
-- 🍪 **JWT Auth** using httpOnly cookies
-- ⏱️ OTP expires after 10 minutes
-
+A full-stack authentication system built with **MongoDB, Express, React, and Node.js**, featuring:
+- Email verification via OTP
+- Password reset functionality
+- JWT-based authentication
+- Secure cookie handling
 ---
+
+## ✨ Features
+- ✅ User registration with email verification
+- 🔐 Login & protected routes using JWT tokens
+- 📩 Send OTP via email using `nodemailer`
+- 🔁 Password reset via verified OTP
+- ☁️ Environment-variable driven secure setup
+---
+
+## 📸 Screenshots
+
+### 🧾 Register & Verify Email
+![Home](./screenshots/MERN-home.png)
+
+### 🔑 Login
+![Login](./screenshots/login.png)
+
+### 🔁 Reset Password with OTP
+![Reset Password](./screenshots/otp.png)
+
 
 ## 🧪 Tech Stack
 
@@ -42,6 +51,12 @@ npm install
 npm run dev
 
 cd Account-Verification
+
+cd server
+npm install
+
+cd ../client
+npm install
 ```
 
 ```
@@ -66,4 +81,5 @@ SENDER_EMAIL=your_email@example.com
 - **Input validation and proper error handling**
 
 ## Author
--- *Rounak Bakshi**
+-- *Rounak Bakshi*
+--*Project: Account Verification Repo*
